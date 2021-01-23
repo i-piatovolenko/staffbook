@@ -1,29 +1,14 @@
 const { app, BrowserWindow } = require('electron');
-const { readFileSync, writeFileSync } = require('fs');
 const { ipcMain } = require('electron');
-
 const { PrismaClient } = require ('@prisma/client');
 
 const prisma = new PrismaClient()
 
-// A `main` function so that you can use async/await
-
-
-
-function readConfig() {
-  const data = readFileSync('./store.txt', 'utf8')
-  return data
-}
-
-function writeStore() {
-  writeFileSync('./store.txt', "New store!")
-}
-
 let users = [{id: 0, email: "120894v@gmail.com", name: "John"}];
+
 async function main() {
   const allUsers = await prisma.user.findMany()
   users = allUsers;
-  console.log(allUsers)
 }
 main()
   .catch(e => {
@@ -34,7 +19,6 @@ main()
   });
 
 ipcMain.on('read-store', (event, arg) => {
-  console.log(arg)
   event.returnValue = users;
 })
 
